@@ -83,7 +83,7 @@ public abstract class PhysicObject
     }
     
     // Gets called internally by an SpaceManager
-    final void update() {
+    public final void update() {
         // Don't update if inactive
         if(!active) return; 
         
