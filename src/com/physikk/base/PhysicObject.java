@@ -111,6 +111,6 @@ public abstract class PhysicObject
         
     /// Abstract
     
-    abstract void tick();
-    abstract void tickSecond();
+    protected abstract void tick();
+    protected abstract void tickSecond();
 }
