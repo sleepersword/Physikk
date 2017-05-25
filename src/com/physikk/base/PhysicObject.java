@@ -73,7 +73,15 @@ public abstract class PhysicObject
     public final boolean isActive() {
         return active;
     }
-   
+       
+    public final void activate() {
+        active = true;
+    }
+    
+    public final void deactivate() {
+        active = false;
+    }
+    
     // Gets called internally by an SpaceManager
     final void update() {
         // Don't update if inactive
@@ -102,9 +110,6 @@ public abstract class PhysicObject
     }
         
     /// Abstract
-    
-    public abstract void activate();
-    public abstract void deactivate();
     
     abstract void tick();
     abstract void tickSecond();

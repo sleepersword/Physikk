@@ -26,6 +26,8 @@ import java.math.BigDecimal;
  */
 public final class Utils 
 {
+    public static final int TICKS_PER_SECOND = 60;
+    
     // Override default constructor
     private Utils() {}
     
