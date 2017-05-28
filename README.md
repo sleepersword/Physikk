@@ -1,8 +1,8 @@
 # Physikk
 Project for simple physic simulations and research.
 
-TO-DO:
--add javadoc for NamedVector, PhysicObject, MassPoint
--finish implementation of MassPoint
--add PhysicManager for loop & object handling
--add time related effects
+TO-DO:<br />
+-add javadoc for NamedVector, PhysicObject, MassPoint<br />
+-finish implementation of MassPoint<br />
+-add PhysicManager for loop & object handling<br />
+-add time related effects<br />
