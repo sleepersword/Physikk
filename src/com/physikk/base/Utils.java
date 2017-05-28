@@ -26,15 +26,33 @@ import java.math.BigDecimal;
  */
 public final class Utils 
 {
-    public static final int TICKS_PER_SECOND = 60;
-    
     // Override default constructor
     private Utils() {}
+    
+    /**
+     * Defines how often the tick() method will be called per second.
+     */
+    public static final int TICKS_PER_SECOND = 60;
+    
+    /**
+     * Defines how much time elapses between two tick() method calls.
+     */
+    public static final double TIME_PER_TICK = 1.0 / TICKS_PER_SECOND;
+    
+    /**
+     * Defines when a double is equal to another one.
+     */
+    public static final double DOUBLE_PRECISION = 0.0001;
+    
     
     public static double round(double value, int numberOfDigits) {
         BigDecimal bd = new BigDecimal(value);
         bd = bd.setScale(numberOfDigits,BigDecimal.ROUND_HALF_UP);
         
         return bd.doubleValue();
+    }
+    
+    public static boolean equalDoubles(double a, double b){
+        return Math.abs(a - b) < DOUBLE_PRECISION;
     }
 }

@@ -21,16 +21,11 @@ package com.physikk.base;
 import java.util.Locale;
 
 /**
- * Desribes a 3-tupel of doubles.
+ * Describes a 3-tupel of doubles.
  * @author sleepersword
  */
-public final class Vector 
-{
-    /**
-     * Defines when a double is equal to another one.
-     */
-    private static final double DOUBLE_PRECISION = 0.0001;
-    
+public class Vector 
+{    
     /**
      * The vector (0,0,0)
      * @return 
@@ -60,15 +55,15 @@ public final class Vector
     /**
      * The X coordinate.
      */
-    public double X;
+    public double x;
     /**
      * The Y coordinate.
      */
-    public double Y;
+    public double y;
     /**
      * The Z coordinate.
      */
-    public double Z;
+    public double z;
     
     // Constructors
     
@@ -79,9 +74,9 @@ public final class Vector
      * @param z The Z coordinate.
      */
     public Vector(double x, double y, double z) {
-        X = x;
-        Y = y;
-        Z = z;
+        this.x = x;
+        this.y = y;
+        this.z = z;
     }
     
     /**
@@ -131,7 +126,7 @@ public final class Vector
      */
     @Override
     public String toString() {
-        return String.format(Locale.US, "(%.2f, %.2f, %.2f)", X, Y, Z);
+        return String.format(Locale.US, "(%.2f, %.2f, %.2f)", x, y, z);
     }
     
     /**
@@ -144,9 +139,9 @@ public final class Vector
         if (o instanceof Vector) {
             Vector v = (Vector)o;
             
-            boolean check_X = equalDoubles(this.X, v.X);
-            boolean check_Y = equalDoubles(this.Y, v.Y);
-            boolean check_Z = equalDoubles(this.Z, v.Z);
+            boolean check_X = Utils.equalDoubles(this.x, v.x);
+            boolean check_Y = Utils.equalDoubles(this.y, v.y);
+            boolean check_Z = Utils.equalDoubles(this.z, v.z);
             
             return check_X && check_Y && check_Z;
         }
@@ -156,9 +151,9 @@ public final class Vector
     @Override
     public int hashCode() {
         int hash = 5;
-        hash = 97 * hash + (int) (Double.doubleToLongBits(this.X) ^ (Double.doubleToLongBits(this.X) >>> 32));
-        hash = 97 * hash + (int) (Double.doubleToLongBits(this.Y) ^ (Double.doubleToLongBits(this.Y) >>> 32));
-        hash = 97 * hash + (int) (Double.doubleToLongBits(this.Z) ^ (Double.doubleToLongBits(this.Z) >>> 32));
+        hash = 97 * hash + (int) (Double.doubleToLongBits(this.x) ^ (Double.doubleToLongBits(this.x) >>> 32));
+        hash = 97 * hash + (int) (Double.doubleToLongBits(this.y) ^ (Double.doubleToLongBits(this.y) >>> 32));
+        hash = 97 * hash + (int) (Double.doubleToLongBits(this.z) ^ (Double.doubleToLongBits(this.z) >>> 32));
         return hash;
     }
     
@@ -170,7 +165,7 @@ public final class Vector
      * @return The sum of this + v2.
      */
     public Vector sum(Vector v) {
-        return new Vector(this.X + v.X, this.Y + v.Y, this.Z + v.Z);
+        return new Vector(this.x + v.x, this.y + v.y, this.z + v.z);
     }
     
     /**
@@ -179,7 +174,7 @@ public final class Vector
      * @return The subtract of this - v.
      */
     public Vector subtract(Vector v) {
-        return new Vector(this.X - v.X, this.Y - v.Y, this.Z - v.Z);
+        return new Vector(this.x - v.x, this.y - v.y, this.z - v.z);
     }
     
     /**
@@ -188,7 +183,7 @@ public final class Vector
      * @return The scalar product of this * v
      */
     public double scalarMultiply(Vector v) {
-        return this.X*v.X + this.Y*v.Y + this.Z*v.Z;
+        return this.x*v.x + this.y*v.y + this.z*v.z;
     }
     
     /**
@@ -197,9 +192,9 @@ public final class Vector
      * @return The vector product this x v
      */
     public Vector vectorMultiply(Vector v) {
-        double x = this.Y*v.Z - this.Z*v.Y;
-        double y = this.Z*v.X - this.X*v.Z;
-        double z = this.X*v.Y - this.Y*v.X;
+        double x = this.y*v.z - this.z*v.y;
+        double y = this.z*v.x - this.x*v.z;
+        double z = this.x*v.y - this.y*v.x;
         
         return new Vector(x, y, z);
     }
@@ -220,7 +215,7 @@ public final class Vector
      * @return The scaled vector s * this.
      */
     public Vector scale(double s) {
-        return new Vector(s*this.X, s*this.Y, s*this.Z);
+        return new Vector(s*this.x, s*this.y, s*this.z);
     }
     
     /**
@@ -229,17 +224,19 @@ public final class Vector
      * @return True if this || v.
      */
     public boolean isParallel(Vector v) {
-        double sigX = this.X / v.X;
-        double sigY = this.Y / v.Y;
-        double sigZ = this.Z / v.Z;
+        double sigX = this.x / v.x;
+        double sigY = this.y / v.y;
+        double sigZ = this.z / v.z;
         
-        return equalDoubles(sigX, sigY) && equalDoubles(sigX, sigZ) && equalDoubles(sigY, sigZ);
+        return Utils.equalDoubles(sigX, sigY) && Utils.equalDoubles(sigX, sigZ) && Utils.equalDoubles(sigY, sigZ);
     }
     
-    /// Private Help Methods
-    
-    private static boolean equalDoubles(double a, double b){
-        return Math.abs(a - b) < DOUBLE_PRECISION;
-    }
-    
+    /**
+     * Calculates the distance between two vectors.
+     * @param v The right vector.
+     * @return The distance between this and v.
+     */
+    public double distance(Vector v) {
+        return this.subtract(v).getNorm();
+    }    
 }

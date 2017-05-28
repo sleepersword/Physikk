@@ -28,10 +28,15 @@ public abstract class PhysicObject
     protected Vector position;
     protected Vector velocity;
     protected double mass;
-    protected HashMap<String, Vector> forces;
+    protected HashMap<String, NamedVector> forces;
     
     private boolean active;
     private int ticks;
+    
+    protected PhysicObject(boolean isActive) {
+        active = isActive;
+        forces = new HashMap<>();
+    }
     
     /// Full implemented
     
@@ -39,15 +44,14 @@ public abstract class PhysicObject
      * Calculates the total force on this object by superposition.
      * @return The total force.
      */
-    public final Vector getTotalForce() {
+    public final NamedVector getTotalForce() {
         Vector res = Vector.NULLVECTOR();
         
-        // Lambda Expression
-        forces.values().forEach( (f) -> {
-            res.sum(f);
-        });
+        for(Vector f : forces.values()){
+            res = res.sum(f);
+        }
         
-        return res;
+        return new NamedVector("total_force", res);
     }
     
     /**
@@ -82,7 +86,7 @@ public abstract class PhysicObject
         active = false;
     }
     
-    // Gets called internally by an SpaceManager
+    // Gets called internally by an PhysicManager
     public final void update() {
         // Don't update if inactive
         if(!active) return; 
@@ -96,16 +100,15 @@ public abstract class PhysicObject
             ticks = 0;
         }
         
-        // Calculate acceleration and time
+        // Calculate acceleration
         Vector acceleration = getTotalForce().scale(1.0 / mass);
-        double delta_time = 1.0 / Utils.TICKS_PER_SECOND;
         
         // Calculate the change of the velocity
-        Vector delta_velo = acceleration.scale( delta_time );
+        Vector delta_velo = acceleration.scale( Utils.TIME_PER_TICK );
         this.velocity = this.velocity.sum(delta_velo);
         
         // Calculate the change of the position
-        Vector delta_pos = this.velocity.scale( delta_time );
+        Vector delta_pos = this.velocity.scale( Utils.TIME_PER_TICK );
         this.position = this.position.sum(delta_pos);
     }
         
