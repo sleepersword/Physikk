@@ -19,23 +19,27 @@ package com.physikk.base;
 
 import java.util.HashMap;
 
+//TODO: Create updateSecond()
+
 /**
  * The base class for all physical objects.
+ * Call protected constructor in your implementation!
  * @author sleepersword
  */
-public abstract class PhysicObject 
-{
+public abstract class PhysicObject extends Activatable
+{    
+    protected String name;
     protected Vector position;
     protected Vector velocity;
-    protected double mass;
     protected HashMap<String, NamedVector> forces;
+    protected double mass;
     
-    private boolean active;
-    private int ticks;
+    private SystemManager manager;
     
-    protected PhysicObject(boolean isActive) {
-        active = isActive;
-        forces = new HashMap<>();
+    protected PhysicObject(String name, boolean isActive) {
+        this.name = name;
+        this.active = isActive;
+        this.forces = new HashMap<>();
     }
     
     /// Full implemented
@@ -55,10 +59,34 @@ public abstract class PhysicObject
     }
     
     /**
+     * Adds a new force or replaces an existing one.
+     * @param force The new force.
+     */
+    public void setForce(NamedVector force) {
+        forces.put(force.name, force);
+    }    
+    
+    /**
+     * Removes the given force, if it exists.
+     * @param force The force to be removed.
+     */
+    public void removeForce(NamedVector force) {        
+        forces.remove(force.name);
+    }    
+    
+    /**
+     * Returns the name of this object.
+     * @return The name.
+     */
+    public final String getName() {
+        return name;
+    }
+    
+    /**
      * Returns the position of this object.
      * @return The position.
      */
-    public final Vector getPosition() {
+    public Vector getPosition() {
         return position;
     }
     
@@ -66,54 +94,73 @@ public abstract class PhysicObject
      * Returns the velocity of this object.
      * @return The velocity.
      */
-    public final Vector getVelocity() {
+    public Vector getVelocity() {
         return velocity;
+    }
+        
+    /**
+     * Returns the mass of this object.
+     * @return The mass.
+     */
+    public Double getMass() {
+        return mass;
     }
     
     /**
-     * Returns true if this object is active.
-     * @return Whether is active.
+     * Forces a manual update.
      */
-    public final boolean isActive() {
-        return active;
-    }
-       
-    public final void activate() {
-        active = true;
+    public void manualUpdate() {
+        this.update();
     }
     
-    public final void deactivate() {
-        active = false;
-    }
-    
-    // Gets called internally by an PhysicManager
-    public final void update() {
-        // Don't update if inactive
-        if(!active) return; 
-        
+    /**
+     * Gets called internally by a SystemManager
+     */
+    final void update() {        
         // Call specific method tick()
         this.tick();
-        ticks++;
-        if(ticks == Utils.TICKS_PER_SECOND)
-        {
-            this.tickSecond();
-            ticks = 0;
-        }
         
         // Calculate acceleration
-        Vector acceleration = getTotalForce().scale(1.0 / mass);
+        Vector acceleration = getTotalForce().scale(1.0 / getMass() );
         
         // Calculate the change of the velocity
-        Vector delta_velo = acceleration.scale( Utils.TIME_PER_TICK );
+        Vector delta_velo = acceleration.scale( Utils.SECONDS_PER_TICK );
         this.velocity = this.velocity.sum(delta_velo);
         
         // Calculate the change of the position
-        Vector delta_pos = this.velocity.scale( Utils.TIME_PER_TICK );
+        Vector delta_pos = getVelocity().scale( Utils.SECONDS_PER_TICK );
         this.position = this.position.sum(delta_pos);
     }
+    
+    /**
+     * Gets called internally by a SystemManager
+     */
+    final void updateSecond() {
+        tickSecond();
+    }
         
+    /**
+     * Gets called if you call SystemManager.addObject
+     */
+    final void setSystemManager(SystemManager manager) {
+        this.manager = manager;
+    }
     /// Abstract
     
     protected abstract void tick();
     protected abstract void tickSecond();
+    
+    // Oberrides
+    
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        
+        sb.append("[PhysicObject:"); sb.append(getName()); sb.append("]");
+        sb.append("\n  Mass="); sb.append(getMass().toString());
+        sb.append("\n  Position="); sb.append(getPosition().toString());
+        sb.append("\n  Velocity="); sb.append(getVelocity().toString());
+        
+        return sb.toString();
+    }
 }

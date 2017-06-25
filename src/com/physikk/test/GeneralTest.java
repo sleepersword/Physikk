@@ -15,39 +15,33 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
-package com.physikk.mechanic;
+package com.physikk.test;
 
 import com.physikk.base.*;
+import com.physikk.mechanic.*;
+import com.physikk.mechanic.effects.GravitationEffect;
 
 /**
  *
  * @author Sleepersword
  */
-public class MassPoint extends PhysicObject
+public class GeneralTest 
 {
-    public MassPoint(String name, double mass, Vector initialPos, Vector initialVelo, NamedVector... initialForces) {
-        super(name, true);
-        this.mass = mass;
-        this.position = initialPos;
-        this.velocity = initialVelo;
+    
+    public static void main(String[] args) {
+        SystemManager manager = new SystemManager();
         
-        for(NamedVector f : initialForces) {
-            this.forces.put(f.name, f);
-        }
-    }
-    
-    @Override
-    protected void tick() {
-    }
-
-    @Override
-    protected void tickSecond() {
-        System.out.println("[" + this.name + "] Position= " + this.position + "\tVelocity= " + this.velocity + "\tTotal Force= " + this.getTotalForce() );
-    }
-    
-    @Override
-    public String toString() {
-        return super.toString();
+        MassPoint[] mps = new MassPoint[2];
+//        for(Integer i = 0; i < mps.length; i++) {
+//            mps[i] = new MassPoint(i.toString(), 10e3, Utils.randomVector1D(0, 10), Vector.NULLVECTOR() );
+//            System.out.println(mps[i].toString());
+//        }
+        mps[0] = new MassPoint("mp1", 10e10, new Vector(0.0), new Vector(0.0) );
+        mps[1] = new MassPoint("mp2", 10e3, new Vector(1.0), new Vector(0.0) );
+        manager.addObjects(mps);
+        manager.addEffect(new GravitationEffect(), true);
+        
+        manager.start();
     }
     
 }

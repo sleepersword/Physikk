@@ -24,11 +24,7 @@ import java.util.Objects;
  * @author Sleepersword
  */
 public class NamedVector extends Vector
-{
-    public static final NamedVector EARTH_GRAVITY(double mass) {
-        return new NamedVector("earth_gravity", 0, 0, -9.81 * mass);
-    }
-    
+{    
     public final String name;
     
     public NamedVector(String name, double x, double y, double z) {
@@ -46,6 +42,10 @@ public class NamedVector extends Vector
     
     public NamedVector(String name, double x) {
         this(name, x, 0, 0);
+    }
+    
+    public NamedVector(String name) {
+        this(name, 0, 0, 0);
     }
     
     @Override

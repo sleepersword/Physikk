@@ -15,39 +15,35 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
-package com.physikk.mechanic;
-
-import com.physikk.base.*;
+package com.physikk.base;
 
 /**
- *
+ * Describes a basic activatable object.
  * @author Sleepersword
  */
-public class MassPoint extends PhysicObject
+public abstract class Activatable 
 {
-    public MassPoint(String name, double mass, Vector initialPos, Vector initialVelo, NamedVector... initialForces) {
-        super(name, true);
-        this.mass = mass;
-        this.position = initialPos;
-        this.velocity = initialVelo;
-        
-        for(NamedVector f : initialForces) {
-            this.forces.put(f.name, f);
-        }
+    protected boolean active; 
+    
+    /**
+     * Returns true if this object is active.
+     * @return Whether is active.
+     */
+    public final boolean isActive() {
+        return active;
+    }
+       
+    /**
+     * Activates this object.
+     */
+    public final void activate() {
+        active = true;
     }
     
-    @Override
-    protected void tick() {
+    /**
+     * Deactivates this object.
+     */
+    public final void deactivate() {
+        active = false;
     }
-
-    @Override
-    protected void tickSecond() {
-        System.out.println("[" + this.name + "] Position= " + this.position + "\tVelocity= " + this.velocity + "\tTotal Force= " + this.getTotalForce() );
-    }
-    
-    @Override
-    public String toString() {
-        return super.toString();
-    }
-    
 }

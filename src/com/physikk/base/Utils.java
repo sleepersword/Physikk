@@ -19,15 +19,18 @@
 package com.physikk.base;
 
 import java.math.BigDecimal;
+import java.util.concurrent.ThreadLocalRandom;
 
 /**
  *
  * @author sleepersword
  */
 public final class Utils 
-{
+{    
     // Override default constructor
     private Utils() {}
+    
+    /// Constants
     
     /**
      * Defines how often the tick() method will be called per second.
@@ -35,15 +38,52 @@ public final class Utils
     public static final int TICKS_PER_SECOND = 60;
     
     /**
-     * Defines how much time elapses between two tick() method calls.
+     * Defines how many seconds elapse between two tick() method calls.
      */
-    public static final double TIME_PER_TICK = 1.0 / TICKS_PER_SECOND;
+    public static final double SECONDS_PER_TICK = 1.0 / TICKS_PER_SECOND;
+    
+    /**
+     * Defines how many nanoseconds elapse between two tick() method calls.
+     */
+    public static final double NANOSECONDS_PER_TICK = 10e9 / (double)TICKS_PER_SECOND;
     
     /**
      * Defines when a double is equal to another one.
      */
     public static final double DOUBLE_PRECISION = 0.0001;
     
+    /// Physical Constants
+    
+    public static final double GRAVITATIONAL_CONSTANT = 6.674e-11;
+    
+    /// Vector Constants
+    
+    public static final NamedVector EARTH_GRAVITY(double mass) {
+        return new NamedVector("const_gravitation", 0, 0, -9.81 * mass);
+    }    
+    
+    /// Methods
+    
+    public static Vector randomVector3D(double min, double max) {
+        double x = ThreadLocalRandom.current().nextDouble(min, max);
+        double y = ThreadLocalRandom.current().nextDouble(min, max);
+        double z = ThreadLocalRandom.current().nextDouble(min, max);
+        
+        return new Vector(x,y,z);
+    }
+    
+    public static Vector randomVector2D(double min, double max) {
+        double x = ThreadLocalRandom.current().nextDouble(min, max);
+        double y = ThreadLocalRandom.current().nextDouble(min, max);
+        
+        return new Vector(x,y,0);
+    }
+    
+    public static Vector randomVector1D(double min, double max) {
+        double x = ThreadLocalRandom.current().nextDouble(min, max);
+        
+        return new Vector(x);
+    }
     
     public static double round(double value, int numberOfDigits) {
         BigDecimal bd = new BigDecimal(value);
